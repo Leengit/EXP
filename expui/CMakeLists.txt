@@ -100,6 +100,7 @@ target_sources(expui PUBLIC FILE_SET HEADERS
 	${CMAKE_CURRENT_SOURCE_DIR}/../include/libvars.H
 	${CMAKE_CURRENT_SOURCE_DIR}/../include/Timer.H
 	${CMAKE_CURRENT_SOURCE_DIR}/../include/coef.H
+	${CMAKE_CURRENT_SOURCE_DIR}/../include/Covariance.H
 )
 
 install(TARGETS expui FILE_SET HEADERS DESTINATION include/EXP)
