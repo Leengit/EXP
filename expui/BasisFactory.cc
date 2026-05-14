@@ -254,24 +254,20 @@ namespace BasisClasses
     auto fields = getFieldLabels(coordinates);
     for (auto s : fields) ret[s].resize(times.size());
 
+    // Apply centering
+    if (not origin) {
+      x -= coefctr(0);
+      y -= coefctr(1);
+      z -= coefctr(2);
+    }
+
     // Make the return dictionary of arrays
     for (int i=0; i<times.size(); i++) {
       // Load the coefficients for the current time
       set_coefs(coefs->getCoefStruct(times[i]));
 
-      // Apply centering if requested without modifying the input
-      // coordinates so each time step is evaluated from the same point.
-      auto xc = x;
-      auto yc = y;
-      auto zc = z;
-      if (not origin) {
-	xc -= coefctr(0);
-	yc -= coefctr(1);
-	zc -= coefctr(2);
-      }
-      
       // The field evaluation
-      auto v = crt_eval(xc, yc, zc); 
+      auto v = crt_eval(x, y, z); 
 
       // Pack the fields into the dictionary
       for (int j=0; j<fields.size(); j++) ret[fields[j]][i] = v[j];

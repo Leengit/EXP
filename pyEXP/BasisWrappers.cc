@@ -1522,9 +1522,13 @@ void BasisFactoryClasses(py::module &m)
          potential evaluations are separated into full, axisymmetric and
          non-axisymmetric contributions.
 
-         You can get the fields labels by using the __call__ method of the
+         The origin for field evaluations is the frame defined by the
+         coefficients by default.  Setting 'origin=True' will use the
+         origin (0, 0, 0) for field evaluations instead.
+
+         You can get the field labels by using the __call__ method of the
          basis object.  This is equivalent to a tuple of the getFields()
-         output with a list of field labels.
+         output with a list of field labels with 'origin=True'.
 
          Parameters
          ----------
@@ -1645,6 +1649,10 @@ void BasisFactoryClasses(py::module &m)
          Return the field evaluations for a given Cartesian position
          for every frame in a coefficient set.  The field evaluations are
          produced by a call to getFields().
+
+         The origin for field evaluations is the frame defined by the
+         coefficients by default.  Setting 'origin=True' will use the
+         origin (0, 0, 0) for field evaluations instead.
 
          You get a dictionary of fields keyed by field name and an array
          of evaluation times for convenience.  These times will be the same
