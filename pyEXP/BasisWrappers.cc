@@ -1535,7 +1535,7 @@ void BasisFactoryClasses(py::module &m)
          z : float
              z-axis position
          origin : bool
-	     If true, the origin for field evaluations are is (0, 0, 0).
+	     If true, the origin for field evaluations is (0, 0, 0).
              If false, the default, we use the frame defined by the coefficients.
 
          Returns
