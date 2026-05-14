@@ -259,15 +259,19 @@ namespace BasisClasses
       // Load the coefficients for the current time
       set_coefs(coefs->getCoefStruct(times[i]));
 
-      // Apply centering if requested
+      // Apply centering if requested without modifying the input
+      // coordinates so each time step is evaluated from the same point.
+      auto xc = x;
+      auto yc = y;
+      auto zc = z;
       if (not origin) {
-	x -= coefctr(0);
-	y -= coefctr(1);
-	z -= coefctr(2);
+	xc -= coefctr(0);
+	yc -= coefctr(1);
+	zc -= coefctr(2);
       }
       
       // The field evaluation
-      auto v = crt_eval(x, y, z); 
+      auto v = crt_eval(xc, yc, zc); 
 
       // Pack the fields into the dictionary
       for (int j=0; j<fields.size(); j++) ret[fields[j]][i] = v[j];
