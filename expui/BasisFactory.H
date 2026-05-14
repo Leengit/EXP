@@ -197,10 +197,16 @@ namespace BasisClasses
 	       const Coord ctype=Coord::Spherical);
     
     //! Evaluate fields at a point
+    //! @note API change in v7.10.3: Added 'origin' parameter (default=false).
+    //!       This is an ABI-breaking change for external C++ code that
+    //!       subclasses Basis or calls these methods via vtable.
     virtual std::vector<double> getFields(double x, double y, double z,
 					  bool origin=false);
     
     //! Evaluate fields at a point for all coefficients sets
+    //! @note API change in v7.10.3: Added 'origin' parameter (default=false).
+    //!       This is an ABI-breaking change for external C++ code that
+    //!       subclasses Basis or calls these methods via vtable.
     virtual std::tuple<std::map<std::string, Eigen::VectorXd>,
 		       Eigen::VectorXd> getFieldsCoefs
     (double x, double y, double z, std::shared_ptr<CoefClasses::Coefs> coefs,
