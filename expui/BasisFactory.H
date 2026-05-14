@@ -197,17 +197,19 @@ namespace BasisClasses
 	       const Coord ctype=Coord::Spherical);
     
     //! Evaluate fields at a point
-    virtual std::vector<double> getFields(double x, double y, double z);
+    virtual std::vector<double> getFields(double x, double y, double z,
+					  bool origin=false);
     
     //! Evaluate fields at a point for all coefficients sets
     virtual std::tuple<std::map<std::string, Eigen::VectorXd>,
 		       Eigen::VectorXd> getFieldsCoefs
-    (double x, double y, double z, std::shared_ptr<CoefClasses::Coefs> coefs);
+    (double x, double y, double z, std::shared_ptr<CoefClasses::Coefs> coefs,
+     bool origin=false);
     
     //! Evaluate fields at a point, and provide field lables
     virtual std::tuple<std::vector<double>, std::vector<std::string>>
     evaluate(double x, double y, double z)
-    { return {getFields(x, y, z), getFieldLabels(coordinates)}; }
+    { return {getFields(x, y, z, true), getFieldLabels(coordinates)}; }
     
     //! Retrieve the coefficients 
     virtual CoefClasses::CoefStrPtr getCoefficients()

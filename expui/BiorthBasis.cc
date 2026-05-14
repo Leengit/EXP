@@ -818,6 +818,11 @@ namespace BasisClasses
   void Spherical::computeAccel(double x, double y, double z,
 			       Eigen::Ref<Eigen::Vector3d> acc)
   {
+    // Shift to center
+    x -= coefctr(0);
+    y -= coefctr(1);
+    z -= coefctr(2);
+
     // Get polar coordinates
     double R2    = x*x + y*y;
     double r2    = R2  + z*z;
@@ -1804,6 +1809,11 @@ namespace BasisClasses
   void Cylindrical::computeAccel(double x, double y, double z,
 				 Eigen::Ref<Eigen::Vector3d> acc)
   {
+    // Shift to center
+    x -= coefctr(0);
+    y -= coefctr(1);
+    z -= coefctr(2);
+
     double R = sqrt(x*x + y*y);
     double phi = atan2(y, x);
 
@@ -2481,6 +2491,11 @@ namespace BasisClasses
   void FlatDisk::computeAccel(double x, double y, double z, 
 			      Eigen::Ref<Eigen::Vector3d> acc)
   {
+    // Shift to center
+    x -= coefctr(0);
+    y -= coefctr(1);
+    z -= coefctr(2);
+
     // Get thread id
     int tid = omp_get_thread_num();
 
@@ -3270,6 +3285,11 @@ namespace BasisClasses
   void CBDisk::computeAccel(double x, double y, double z,
 			    Eigen::Ref<Eigen::Vector3d> acc)
   {
+    // Shift to center
+    x -= coefctr(0);
+    y -= coefctr(1);
+    z -= coefctr(2);
+
     // Get thread id
     int tid = omp_get_thread_num();
 
@@ -3756,6 +3776,11 @@ namespace BasisClasses
   void Slab::computeAccel(double x, double y, double z,
 			  Eigen::Ref<Eigen::Vector3d> acc)
   {
+    // Shift to center
+    x -= coefctr(0);
+    y -= coefctr(1);
+    z -= coefctr(2);
+
     // Loop indices
     //
     int ix, iy, iz;
@@ -4328,6 +4353,11 @@ namespace BasisClasses
   void Cube::computeAccel(double x, double y, double z,
 			  Eigen::Ref<Eigen::Vector3d> acc)
   {
+    // Shift to center
+    x -= coefctr(0);
+    y -= coefctr(1);
+    z -= coefctr(2);
+
     // Get thread id
     int tid = omp_get_thread_num();
 
@@ -4781,7 +4811,7 @@ namespace BasisClasses
       for (int k=0; k<3; k++) pp(k) = ps(n, k) - ctr(k);
       pp = rot * pp;
 
-      auto v = basis->getFields(pp(0), pp(1), pp(2));
+      auto v = basis->getFields(pp(0), pp(1), pp(2), true);
 
       // First 6 fields are density and potential, followed by acceleration
       for (int k=0; k<3; k++) accel(n, k) += v[6+k] - basis->pseudo(k);

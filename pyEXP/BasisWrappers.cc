@@ -330,18 +330,18 @@ void BasisFactoryClasses(py::module &m)
     // Inherit the constructors
     using BasisClasses::Basis::Basis;
 
-    std::vector<double> getFields(double x, double y, double z) override
+    std::vector<double> getFields(double x, double y, double z, bool origin) override
     {
-      PYBIND11_OVERRIDE(std::vector<double>, Basis, getFields, x, y, z);
+      PYBIND11_OVERRIDE(std::vector<double>, Basis, getFields, x, y, z, origin);
     }
 
     using FCReturn = std::tuple<std::map<std::string, Eigen::VectorXd>,
 				Eigen::VectorXd>;
 
     FCReturn getFieldsCoefs
-    (double x, double y, double z, CoefClasses::CoefsPtr coefs) override
+    (double x, double y, double z, CoefClasses::CoefsPtr coefs, bool origin) override
     {
-      PYBIND11_OVERRIDE(FCReturn, Basis, getFieldsCoefs, x, y, z, coefs);
+      PYBIND11_OVERRIDE(FCReturn, Basis, getFieldsCoefs, x, y, z, coefs, origin);
     }
     
     void accumulate(double x, double y, double z, double mass, unsigned long int indx) override {
@@ -434,9 +434,9 @@ void BasisFactoryClasses(py::module &m)
     // Inherit the constructors
     using FieldBasis::FieldBasis;
 
-    std::vector<double> getFields(double x, double y, double z) override
+    std::vector<double> getFields(double x, double y, double z, bool origin) override
     {
-      PYBIND11_OVERRIDE(std::vector<double>, FieldBasis, getFields, x, y, z);
+      PYBIND11_OVERRIDE(std::vector<double>, FieldBasis, getFields, x, y, z, origin);
     }
 
     void accumulate(double m, double x, double y, double z,
@@ -561,8 +561,8 @@ void BasisFactoryClasses(py::module &m)
     // Inherit the constructors
     using Spherical::Spherical;
 
-    std::vector<double> getFields(double x, double y, double z) override {
-      PYBIND11_OVERRIDE(std::vector<double>, Spherical, getFields, x, y, z);
+    std::vector<double> getFields(double x, double y, double z, bool origin) override {
+      PYBIND11_OVERRIDE(std::vector<double>, Spherical, getFields, x, y, z, origin);
     }
 
     void accumulate(double x, double y, double z, double mass, unsigned long int indx) override {
@@ -627,8 +627,8 @@ void BasisFactoryClasses(py::module &m)
     // Inherit the constructors
     using Cylindrical::Cylindrical;
 
-    std::vector<double> getFields(double x, double y, double z) override {
-      PYBIND11_OVERRIDE(std::vector<double>, Cylindrical, getFields, x, y, z);
+    std::vector<double> getFields(double x, double y, double z, bool origin) override {
+      PYBIND11_OVERRIDE(std::vector<double>, Cylindrical, getFields, x, y, z, origin);
     }
 
     void accumulate(double x, double y, double z, double mass, unsigned long int indx) override {
@@ -705,9 +705,9 @@ void BasisFactoryClasses(py::module &m)
     // Inherit the constructors
     using FlatDisk::FlatDisk;
 
-    std::vector<double> getFields(double x, double y, double z) override
+    std::vector<double> getFields(double x, double y, double z, bool origin) override
     {
-      PYBIND11_OVERRIDE(std::vector<double>, FlatDisk, getFields, x, y, z);
+      PYBIND11_OVERRIDE(std::vector<double>, FlatDisk, getFields, x, y, z, origin);
     }
 
     void accumulate(double x, double y, double z, double mass, unsigned long int indx) override
@@ -787,9 +787,9 @@ void BasisFactoryClasses(py::module &m)
     // Inherit the constructors
     using CBDisk::CBDisk;
 
-    std::vector<double> getFields(double x, double y, double z) override
+    std::vector<double> getFields(double x, double y, double z, bool origin) override
     {
-      PYBIND11_OVERRIDE(std::vector<double>, CBDisk, getFields, x, y, z);
+      PYBIND11_OVERRIDE(std::vector<double>, CBDisk, getFields, x, y, z, origin);
     }
 
     void accumulate(double x, double y, double z, double mass, unsigned long int indx) override
@@ -861,9 +861,9 @@ void BasisFactoryClasses(py::module &m)
     // Inherit the constructors
     using Slab::Slab;
 
-    std::vector<double> getFields(double x, double y, double z) override
+    std::vector<double> getFields(double x, double y, double z, bool origin) override
     {
-      PYBIND11_OVERRIDE(std::vector<double>, Slab, getFields, x, y, z);
+      PYBIND11_OVERRIDE(std::vector<double>, Slab, getFields, x, y, z, origin);
     }
 
     void accumulate(double x, double y, double z, double mass, unsigned long int indx) override
@@ -935,9 +935,9 @@ void BasisFactoryClasses(py::module &m)
     // Inherit the constructors
     using Cube::Cube;
 
-    std::vector<double> getFields(double x, double y, double z) override
+    std::vector<double> getFields(double x, double y, double z, bool origin) override
     {
-      PYBIND11_OVERRIDE(std::vector<double>, Cube, getFields, x, y, z);
+      PYBIND11_OVERRIDE(std::vector<double>, Cube, getFields, x, y, z, origin);
     }
 
     void accumulate(double x, double y, double z, double mass, unsigned long int indx) override
@@ -1534,6 +1534,9 @@ void BasisFactoryClasses(py::module &m)
              y-axis position
          z : float
              z-axis position
+         origin : bool
+	     If true, the origin for field evaluations are is (0, 0, 0).
+             If false, the default, we use the frame defined by the coefficients.
 
          Returns
          -------
@@ -1544,10 +1547,10 @@ void BasisFactoryClasses(py::module &m)
          getFieldsCoefs : get fields for each coefficient set
          __call__       : same as getFields() but provides field labels in a tuple
          )",
-	 py::arg("x"), py::arg("y"), py::arg("z"))
+	 py::arg("x"), py::arg("y"), py::arg("z"), py::arg("origin") = false)
     .def("getAccel", py::overload_cast<double, double, double>(&BasisClasses::BiorthBasis::getAccel),
 	 R"(
-         Return the acceleration for a given Cartesian position
+         Return the acceleration for a given Cartesian position in the frame defined by the coeffients.
 
          Parameters
          ----------
@@ -1571,7 +1574,7 @@ void BasisFactoryClasses(py::module &m)
 	 py::arg("x"), py::arg("y"), py::arg("z"))
     .def("getAccel", py::overload_cast<Eigen::Ref<const Eigen::VectorXd>, Eigen::Ref<const Eigen::VectorXd>, Eigen::Ref<const Eigen::VectorXd>>(&BasisClasses::BiorthBasis::getAccel),
 	 R"(
-         Return the acceleration for a given Cartesian position
+         Return the acceleration for a given Cartesian position in the frame defined by the coeffients.
 
          Parameters
          ----------
@@ -1595,7 +1598,7 @@ void BasisFactoryClasses(py::module &m)
 	 py::arg("x"), py::arg("y"), py::arg("z"))
     .def("getAccel", py::overload_cast<Eigen::Ref<const RowMatrixXd>>(&BasisClasses::BiorthBasis::getAccel),
 	 R"(
-         Return the acceleration for an array of Cartesian positions
+         Return the acceleration for an array of Cartesian positions in the frame defined by the coeffients.
 
          Parameters
          ----------
@@ -1615,7 +1618,7 @@ void BasisFactoryClasses(py::module &m)
 	 py::arg("pos"))
     .def("getAccelArray", py::overload_cast<Eigen::Ref<const Eigen::VectorXd>, Eigen::Ref<const Eigen::VectorXd>, Eigen::Ref<const Eigen::VectorXd>>(&BasisClasses::BiorthBasis::getAccel),
 	 R"(
-         Return the acceleration for a given Cartesian position
+         Return the acceleration for a given Cartesian position in the frame defined by the coeffients.
 
          Parameters
          ----------
@@ -1657,6 +1660,9 @@ void BasisFactoryClasses(py::module &m)
              z-axis position
          coefs: CoefClasses::Coefs
              the coefficient set
+         origin : bool
+	     If true, the origin for field evaluations are is (0, 0, 0).
+             If false, the default, we use the frame defined by the coefficients.
 
          Returns
          -------
@@ -1668,7 +1674,7 @@ void BasisFactoryClasses(py::module &m)
          getFields  : get fields for the currently assigned coefficients
          __call__   : same getFields() but provides field labels in a tuple
          )",
-	 py::arg("x"), py::arg("y"), py::arg("z"), py::arg("coefs"))
+	 py::arg("x"), py::arg("y"), py::arg("z"), py::arg("coefs"), py::arg("origin") = false)
     .def("setFieldType",       &BasisClasses::BiorthBasis::setFieldType,
          R"(
          Set the coordinate system for force evaluations.  The natural 

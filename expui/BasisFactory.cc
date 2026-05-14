@@ -228,14 +228,21 @@ namespace BasisClasses
     };
   }
     
-  std::vector<double> Basis::getFields(double x, double y, double z)
+  std::vector<double> Basis::getFields(double x, double y, double z,
+				       bool origin)
   {
+    if (not origin) {
+      x -= coefctr(0);
+      y -= coefctr(1);
+      z -= coefctr(2);
+    }
     return crt_eval(x, y, z);
   }
     
   std::tuple<std::map<std::string, Eigen::VectorXd>, Eigen::VectorXd>
   Basis::getFieldsCoefs
-  (double x, double y, double z, std::shared_ptr<CoefClasses::Coefs> coefs)
+  (double x, double y, double z, std::shared_ptr<CoefClasses::Coefs> coefs,
+   bool origin)
   {
     // Python dictonary for return
     std::map<std::string, Eigen::VectorXd> ret;
@@ -249,9 +256,19 @@ namespace BasisClasses
 
     // Make the return dictionary of arrays
     for (int i=0; i<times.size(); i++) {
+      // Load the coefficients for the current time
       set_coefs(coefs->getCoefStruct(times[i]));
+
+      // Apply centering if requested
+      if (not origin) {
+	x -= coefctr(0);
+	y -= coefctr(1);
+	z -= coefctr(2);
+      }
+      
       // The field evaluation
       auto v = crt_eval(x, y, z); 
+
       // Pack the fields into the dictionary
       for (int j=0; j<fields.size(); j++) ret[fields[j]][i] = v[j];
     }
