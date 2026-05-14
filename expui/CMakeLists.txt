@@ -97,7 +97,7 @@ target_sources(expui PUBLIC FILE_SET HEADERS
 	${CMAKE_CURRENT_SOURCE_DIR}/../include/DiskWithHalo.H
 	${CMAKE_CURRENT_SOURCE_DIR}/../include/EmpCyl2d.H
 	${CMAKE_CURRENT_SOURCE_DIR}/../include/EXPmath.H
-	${CMAKE_CURRENT_SOURCE_DIR}/../include/EXPversion.H
+	# ${CMAKE_CURRENT_SOURCE_DIR}/../include/EXPversion.H
 	${CMAKE_CURRENT_SOURCE_DIR}/../include/libvars.H
 	${CMAKE_CURRENT_SOURCE_DIR}/../include/Timer.H
 	${CMAKE_CURRENT_SOURCE_DIR}/../include/coef.H
