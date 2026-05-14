@@ -209,7 +209,7 @@ namespace BasisClasses
     //! Evaluate fields at a point, and provide field lables
     virtual std::tuple<std::vector<double>, std::vector<std::string>>
     evaluate(double x, double y, double z)
-    { return {getFields(x, y, z, true), getFieldLabels(coordinates)}; }
+    { return {getFields(x, y, z), getFieldLabels(coordinates)}; }
     
     //! Retrieve the coefficients 
     virtual CoefClasses::CoefStrPtr getCoefficients()
