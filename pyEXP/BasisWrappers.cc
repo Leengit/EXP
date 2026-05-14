@@ -1574,7 +1574,7 @@ void BasisFactoryClasses(py::module &m)
 	 py::arg("x"), py::arg("y"), py::arg("z"))
     .def("getAccel", py::overload_cast<Eigen::Ref<const Eigen::VectorXd>, Eigen::Ref<const Eigen::VectorXd>, Eigen::Ref<const Eigen::VectorXd>>(&BasisClasses::BiorthBasis::getAccel),
 	 R"(
-         Return the acceleration for a given Cartesian position in the frame defined by the coeffients.
+         Return the acceleration for a given Cartesian position in the frame defined by the coefficients.
 
          Parameters
          ----------
@@ -1598,7 +1598,7 @@ void BasisFactoryClasses(py::module &m)
 	 py::arg("x"), py::arg("y"), py::arg("z"))
     .def("getAccel", py::overload_cast<Eigen::Ref<const RowMatrixXd>>(&BasisClasses::BiorthBasis::getAccel),
 	 R"(
-         Return the acceleration for an array of Cartesian positions in the frame defined by the coeffients.
+         Return the acceleration for an array of Cartesian positions in the frame defined by the coefficients.
 
          Parameters
          ----------
@@ -1618,7 +1618,7 @@ void BasisFactoryClasses(py::module &m)
 	 py::arg("pos"))
     .def("getAccelArray", py::overload_cast<Eigen::Ref<const Eigen::VectorXd>, Eigen::Ref<const Eigen::VectorXd>, Eigen::Ref<const Eigen::VectorXd>>(&BasisClasses::BiorthBasis::getAccel),
 	 R"(
-         Return the acceleration for a given Cartesian position in the frame defined by the coeffients.
+         Return the acceleration for a given Cartesian position in the frame defined by the coefficients.
 
          Parameters
          ----------
