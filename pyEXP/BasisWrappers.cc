@@ -1550,7 +1550,7 @@ void BasisFactoryClasses(py::module &m)
 	 py::arg("x"), py::arg("y"), py::arg("z"), py::arg("origin") = false)
     .def("getAccel", py::overload_cast<double, double, double>(&BasisClasses::BiorthBasis::getAccel),
 	 R"(
-         Return the acceleration for a given Cartesian position in the frame defined by the coeffients.
+         Return the acceleration for a given Cartesian position in the frame defined by the coefficients.
 
          Parameters
          ----------
