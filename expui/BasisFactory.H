@@ -212,7 +212,7 @@ namespace BasisClasses
     (double x, double y, double z, std::shared_ptr<CoefClasses::Coefs> coefs,
      bool origin=true);
     
-    //! Evaluate fields at a point, and provide field lables
+    //! Evaluate fields at a point, and provide field labels
     virtual std::tuple<std::vector<double>, std::vector<std::string>>
     evaluate(double x, double y, double z)
     { return {getFields(x, y, z, true), getFieldLabels(coordinates)}; }

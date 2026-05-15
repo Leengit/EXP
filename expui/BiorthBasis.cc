@@ -1823,8 +1823,12 @@ namespace BasisClasses
     
     tdens = sl->accumulated_dens_eval(R, z, phi, tdens0);
 
-    double tpotx = tpotR*x/R - tpotp*y/R ;
-    double tpoty = tpotR*y/R + tpotp*x/R ;
+    double tpotx = 0.0;
+    double tpoty = 0.0;
+    if (R > 0.0) {
+      tpotx = tpotR*x/R - tpotp*y/R;
+      tpoty = tpotR*y/R + tpotp*x/R;
+    }
 
     // Apply G to forces on return
     acc << tpotx*G, tpoty*G, tpotz*G;

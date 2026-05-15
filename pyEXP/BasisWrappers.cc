@@ -470,7 +470,20 @@ void BasisFactoryClasses(py::module &m)
 
     std::vector<double> getFields(double x, double y, double z, bool origin) override
     {
-      PYBIND11_OVERRIDE(std::vector<double>, FieldBasis, getFields, x, y, z, origin);
+      py::gil_scoped_acquire gil;
+      py::function override = py::get_override(static_cast<const FieldBasis *>(this), "getFields");
+
+      if (override) {
+        try {
+          return override(x, y, z, origin).cast<std::vector<double>>();
+        } catch (py::error_already_set &e) {
+          if (!e.matches(PyExc_TypeError)) throw;
+          e.clear();
+          return override(x, y, z).cast<std::vector<double>>();
+        }
+      }
+
+      return FieldBasis::getFields(x, y, z, origin);
     }
 
     void accumulate(double m, double x, double y, double z,
@@ -596,7 +609,16 @@ void BasisFactoryClasses(py::module &m)
     using Spherical::Spherical;
 
     std::vector<double> getFields(double x, double y, double z, bool origin) override {
-      PYBIND11_OVERRIDE(std::vector<double>, Spherical, getFields, x, y, z, origin);
+      py::function override = py::get_override(static_cast<const Spherical*>(this), "getFields");
+      if (override) {
+        try {
+          return py::cast<std::vector<double>>(override(x, y, z, origin));
+        } catch (py::error_already_set &e) {
+          if (!e.matches(PyExc_TypeError)) throw;
+        }
+        return py::cast<std::vector<double>>(override(x, y, z));
+      }
+      return Spherical::getFields(x, y, z, origin);
     }
 
     void accumulate(double x, double y, double z, double mass, unsigned long int indx) override {
@@ -823,7 +845,18 @@ void BasisFactoryClasses(py::module &m)
 
     std::vector<double> getFields(double x, double y, double z, bool origin) override
     {
-      PYBIND11_OVERRIDE(std::vector<double>, CBDisk, getFields, x, y, z, origin);
+      py::gil_scoped_acquire gil;
+      py::function override = py::get_override(this, "getFields");
+      if (override) {
+        try {
+          return override(x, y, z, origin).cast<std::vector<double>>();
+        } catch (py::error_already_set &e) {
+          if (!e.matches(PyExc_TypeError)) throw;
+          PyErr_Clear();
+          return override(x, y, z).cast<std::vector<double>>();
+        }
+      }
+      return CBDisk::getFields(x, y, z, origin);
     }
 
     void accumulate(double x, double y, double z, double mass, unsigned long int indx) override
@@ -897,7 +930,19 @@ void BasisFactoryClasses(py::module &m)
 
     std::vector<double> getFields(double x, double y, double z, bool origin) override
     {
-      PYBIND11_OVERRIDE(std::vector<double>, Slab, getFields, x, y, z, origin);
+      py::gil_scoped_acquire gil;
+      py::function overload = py::get_overload(static_cast<const Slab *>(this), "getFields");
+      if (overload) {
+        try {
+          return overload(x, y, z, origin).cast<std::vector<double>>();
+        } catch (py::error_already_set &e) {
+          if (!e.matches(PyExc_TypeError)) throw;
+        }
+
+        return overload(x, y, z).cast<std::vector<double>>();
+      }
+
+      return Slab::getFields(x, y, z, origin);
     }
 
     void accumulate(double x, double y, double z, double mass, unsigned long int indx) override
@@ -971,7 +1016,19 @@ void BasisFactoryClasses(py::module &m)
 
     std::vector<double> getFields(double x, double y, double z, bool origin) override
     {
-      PYBIND11_OVERRIDE(std::vector<double>, Cube, getFields, x, y, z, origin);
+      py::function override = py::get_override(this, "getFields");
+      if (override) {
+        try {
+          return override(x, y, z, origin).cast<std::vector<double>>();
+        } catch (py::error_already_set &e) {
+          if (e.matches(PyExc_TypeError)) {
+            e.clear();
+            return override(x, y, z).cast<std::vector<double>>();
+          }
+          throw;
+        }
+      }
+      return Cube::getFields(x, y, z, origin);
     }
 
     void accumulate(double x, double y, double z, double mass, unsigned long int indx) override
