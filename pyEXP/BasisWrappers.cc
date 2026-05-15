@@ -1556,9 +1556,9 @@ void BasisFactoryClasses(py::module &m)
          potential evaluations are separated into full, axisymmetric and
          non-axisymmetric contributions.
 
-         The origin for field evaluations is the frame defined by the
-         coefficients by default.  Setting 'origin=True' will use the
-         origin (0, 0, 0) for field evaluations instead.
+         The origin for field evaluations is the expansion origin by
+         default ('origin=True') Setting 'origin=False' will use the
+         origin defined by the coefficients for field evaluations instead.
 
          You can get the field labels by using the __call__ method of the
          basis object.  This is equivalent to a tuple of the getFields()
@@ -1573,8 +1573,8 @@ void BasisFactoryClasses(py::module &m)
          z : float
              z-axis position
          origin : bool
-	     If true, the origin for field evaluations is (0, 0, 0).
-             If false, the default, we use the frame defined by the coefficients.
+             If true, the default, origin for field evaluations is (0, 0, 0).
+             If false,  we use the frame defined by the coefficients.
 
          Returns
          -------
@@ -1585,7 +1585,7 @@ void BasisFactoryClasses(py::module &m)
          getFieldsCoefs : get fields for each coefficient set
          __call__       : same as getFields() but provides field labels in a tuple
          )",
-	 py::arg("x"), py::arg("y"), py::arg("z"), py::arg("origin") = false)
+	 py::arg("x"), py::arg("y"), py::arg("z"), py::arg("origin") = true)
     .def("getAccel", py::overload_cast<double, double, double>(&BasisClasses::BiorthBasis::getAccel),
 	 R"(
          Return the acceleration for a given Cartesian position in the frame defined by the coefficients.
@@ -1684,9 +1684,9 @@ void BasisFactoryClasses(py::module &m)
          for every frame in a coefficient set.  The field evaluations are
          produced by a call to getFields().
 
-         The origin for field evaluations is the frame defined by the
-         coefficients by default.  Setting 'origin=True' will use the
-         origin (0, 0, 0) for field evaluations instead.
+         The origin for field evaluations is the expansion origin by
+         default ('origin=True') Setting 'origin=False' will use the
+         origin defined by the coefficients for field evaluations instead.
 
          You get a dictionary of fields keyed by field name and an array
          of evaluation times for convenience.  These times will be the same
@@ -1703,8 +1703,8 @@ void BasisFactoryClasses(py::module &m)
          coefs: CoefClasses::Coefs
              the coefficient set
          origin : bool
-	     If true, the origin for field evaluations is (0, 0, 0).
-             If false, the default, we use the frame defined by the coefficients.
+             If true, the default, origin for field evaluations is (0, 0, 0).
+             If false,  we use the frame defined by the coefficients.
 
          Returns
          -------
@@ -1716,7 +1716,7 @@ void BasisFactoryClasses(py::module &m)
          getFields  : get fields for the currently assigned coefficients
          __call__   : same getFields() but provides field labels in a tuple
          )",
-	 py::arg("x"), py::arg("y"), py::arg("z"), py::arg("coefs"), py::arg("origin") = false)
+	 py::arg("x"), py::arg("y"), py::arg("z"), py::arg("coefs"), py::arg("origin") = true)
     .def("setFieldType",       &BasisClasses::BiorthBasis::setFieldType,
          R"(
          Set the coordinate system for force evaluations.  The natural 
