@@ -243,7 +243,7 @@ namespace BasisClasses
   Basis::getFieldsCoefs
   (double x, double y, double z, std::shared_ptr<CoefClasses::Coefs> coefs)
   {
-    // Python dictonary for return
+    // Python dictionary for return
     std::map<std::string, Eigen::VectorXd> ret;
 
     // Times for the coefficients
@@ -277,7 +277,7 @@ namespace BasisClasses
   Basis::getFieldsCoefsOrigin
   (double x, double y, double z, std::shared_ptr<CoefClasses::Coefs> coefs)
   {
-    // Python dictonary for return
+    // Python dictionary for return
     std::map<std::string, Eigen::VectorXd> ret;
 
     // Times for the coefficients
