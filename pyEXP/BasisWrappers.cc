@@ -332,7 +332,24 @@ void BasisFactoryClasses(py::module &m)
 
     std::vector<double> getFields(double x, double y, double z, bool origin) override
     {
-      PYBIND11_OVERRIDE(std::vector<double>, Basis, getFields, x, y, z, origin);
+      pybind11::gil_scoped_acquire gil;
+      pybind11::function override_func =
+	pybind11::get_override(static_cast<const Basis*>(this), "getFields");
+      if (override_func) {
+	try {
+	  auto result = override_func(x, y, z, origin);
+	  return result.cast<std::vector<double>>();
+	} catch (pybind11::error_already_set& e) {
+	  if (e.matches(PyExc_TypeError)) {
+	    // Backward-compatible fallback for subclasses with 3-arg signature
+	    PyErr_Clear();
+	    auto result = override_func(x, y, z);
+	    return result.cast<std::vector<double>>();
+	  }
+	  throw;
+	}
+      }
+      return Basis::getFields(x, y, z, origin);
     }
 
     using FCReturn = std::tuple<std::map<std::string, Eigen::VectorXd>,
@@ -341,7 +358,24 @@ void BasisFactoryClasses(py::module &m)
     FCReturn getFieldsCoefs
     (double x, double y, double z, CoefClasses::CoefsPtr coefs, bool origin) override
     {
-      PYBIND11_OVERRIDE(FCReturn, Basis, getFieldsCoefs, x, y, z, coefs, origin);
+      pybind11::gil_scoped_acquire gil;
+      pybind11::function override_func =
+	pybind11::get_override(static_cast<const Basis*>(this), "getFieldsCoefs");
+      if (override_func) {
+	try {
+	  auto result = override_func(x, y, z, coefs, origin);
+	  return result.cast<FCReturn>();
+	} catch (pybind11::error_already_set& e) {
+	  if (e.matches(PyExc_TypeError)) {
+	    // Backward-compatible fallback for subclasses with 4-arg signature
+	    PyErr_Clear();
+	    auto result = override_func(x, y, z, coefs);
+	    return result.cast<FCReturn>();
+	  }
+	  throw;
+	}
+      }
+      return Basis::getFieldsCoefs(x, y, z, coefs, origin);
     }
     
     void accumulate(double x, double y, double z, double mass, unsigned long int indx) override {
