@@ -470,7 +470,20 @@ void BasisFactoryClasses(py::module &m)
 
     std::vector<double> getFields(double x, double y, double z, bool origin) override
     {
-      PYBIND11_OVERRIDE(std::vector<double>, FieldBasis, getFields, x, y, z, origin);
+      py::gil_scoped_acquire gil;
+      py::function override = py::get_override(static_cast<const FieldBasis *>(this), "getFields");
+
+      if (override) {
+        try {
+          return override(x, y, z, origin).cast<std::vector<double>>();
+        } catch (py::error_already_set &e) {
+          if (!e.matches(PyExc_TypeError)) throw;
+          e.clear();
+          return override(x, y, z).cast<std::vector<double>>();
+        }
+      }
+
+      return FieldBasis::getFields(x, y, z, origin);
     }
 
     void accumulate(double m, double x, double y, double z,
