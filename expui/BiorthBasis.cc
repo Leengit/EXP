@@ -2584,8 +2584,12 @@ namespace BasisClasses
     zpot *= -G;
     ppot *= -G;
 
-    double potx = rpot*x/R - ppot*y/R;
-    double poty = rpot*y/R + ppot*x/R;
+    double potx = 0.0;
+    double poty = 0.0;
+    if (R > 0.0) {
+      potx = rpot*x/R - ppot*y/R;
+      poty = rpot*y/R + ppot*x/R;
+    }
 
     acc << potx, poty, zpot;
   }
@@ -3354,8 +3358,12 @@ namespace BasisClasses
     rpot *= -G;
     ppot *= -G;
 
-    double potx = rpot*x/R - ppot*y/R;
-    double poty = rpot*y/R + ppot*x/R;
+    double potx = 0.0;
+    double poty = 0.0;
+    if (R > 0.0) {
+      potx = rpot*x/R - ppot*y/R;
+      poty = rpot*y/R + ppot*x/R;
+    }
 
     acc << potx, poty, zpot;
   }
