@@ -609,7 +609,16 @@ void BasisFactoryClasses(py::module &m)
     using Spherical::Spherical;
 
     std::vector<double> getFields(double x, double y, double z, bool origin) override {
-      PYBIND11_OVERRIDE(std::vector<double>, Spherical, getFields, x, y, z, origin);
+      py::function override = py::get_override(static_cast<const Spherical*>(this), "getFields");
+      if (override) {
+        try {
+          return py::cast<std::vector<double>>(override(x, y, z, origin));
+        } catch (py::error_already_set &e) {
+          if (!e.matches(PyExc_TypeError)) throw;
+        }
+        return py::cast<std::vector<double>>(override(x, y, z));
+      }
+      return Spherical::getFields(x, y, z, origin);
     }
 
     void accumulate(double x, double y, double z, double mass, unsigned long int indx) override {
