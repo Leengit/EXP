@@ -254,20 +254,21 @@ namespace BasisClasses
     auto fields = getFieldLabels(coordinates);
     for (auto s : fields) ret[s].resize(times.size());
 
-    // Apply centering
-    if (not origin) {
-      x -= coefctr(0);
-      y -= coefctr(1);
-      z -= coefctr(2);
-    }
-
     // Make the return dictionary of arrays
     for (int i=0; i<times.size(); i++) {
       // Load the coefficients for the current time
       set_coefs(coefs->getCoefStruct(times[i]));
 
+      double xc = x, yc = y, zc = z;
+      // Apply centering
+      if (not origin) {
+	xc -= coefctr(0);
+	yc -= coefctr(1);
+	zc -= coefctr(2);
+      }
+      
       // The field evaluation
-      auto v = crt_eval(x, y, z); 
+      auto v = crt_eval(xc, yc, zc); 
 
       // Pack the fields into the dictionary
       for (int j=0; j<fields.size(); j++) ret[fields[j]][i] = v[j];
