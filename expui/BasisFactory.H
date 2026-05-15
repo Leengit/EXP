@@ -196,26 +196,28 @@ namespace BasisClasses
     operator()(double x1, double x2, double x3,
 	       const Coord ctype=Coord::Spherical);
     
-    //! Evaluate fields at a point
-    //! @note API change in v7.10.3: Added 'origin' parameter (default=true).
-    //!       This is an ABI-breaking change for external C++ code that
-    //!       subclasses Basis or calls these methods via vtable.
-    virtual std::vector<double> getFields(double x, double y, double z,
-					  bool origin=true);
+    //! Evaluate fields at a point in the expansion-origin frame
+    virtual std::vector<double> getFields(double x, double y, double z);
+
+    //! Evaluate fields at a point in the coefficient-origin frame
+    virtual std::vector<double> getFieldsOrigin(double x, double y, double z);
     
-    //! Evaluate fields at a point for all coefficients sets
-    //! @note API change in v7.10.3: Added 'origin' parameter (default=true).
-    //!       This is an ABI-breaking change for external C++ code that
-    //!       subclasses Basis or calls these methods via vtable.
+    //! Evaluate fields at a point for all coefficients sets in the
+    //! expansion-origin frame
     virtual std::tuple<std::map<std::string, Eigen::VectorXd>,
 		       Eigen::VectorXd> getFieldsCoefs
-    (double x, double y, double z, std::shared_ptr<CoefClasses::Coefs> coefs,
-     bool origin=true);
+    (double x, double y, double z, std::shared_ptr<CoefClasses::Coefs> coefs);
+
+    //! Evaluate fields at a point for all coefficients sets in the
+    //! coefficient-origin frame
+    virtual std::tuple<std::map<std::string, Eigen::VectorXd>,
+		       Eigen::VectorXd> getFieldsCoefsOrigin
+    (double x, double y, double z, std::shared_ptr<CoefClasses::Coefs> coefs);
     
     //! Evaluate fields at a point, and provide field labels
     virtual std::tuple<std::vector<double>, std::vector<std::string>>
     evaluate(double x, double y, double z)
-    { return {getFields(x, y, z, true), getFieldLabels(coordinates)}; }
+    { return {getFields(x, y, z), getFieldLabels(coordinates)}; }
     
     //! Retrieve the coefficients 
     virtual CoefClasses::CoefStrPtr getCoefficients()

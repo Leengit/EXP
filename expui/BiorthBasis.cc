@@ -1797,8 +1797,12 @@ namespace BasisClasses
     
     tdens = sl->accumulated_dens_eval(R, z, phi, tdens0);
 
-    double tpotx = tpotR*x/R - tpotp*y/R ;
-    double tpoty = tpotR*y/R + tpotp*x/R ;
+    double tpotx = 0.0;
+    double tpoty = 0.0;
+    if (R > 0.0) {
+      tpotx = tpotR*x/R - tpotp*y/R;
+      tpoty = tpotR*y/R + tpotp*x/R;
+    }
 
     return
       {tdens0, tdens - tdens0, tdens,
@@ -4823,7 +4827,7 @@ namespace BasisClasses
       for (int k=0; k<3; k++) pp(k) = ps(n, k) - ctr(k);
       pp = rot * pp;
 
-      auto v = basis->getFields(pp(0), pp(1), pp(2), true);
+      auto v = basis->getFields(pp(0), pp(1), pp(2));
 
       // First 6 fields are density and potential, followed by acceleration
       for (int k=0; k<3; k++) accel(n, k) += v[6+k] - basis->pseudo(k);

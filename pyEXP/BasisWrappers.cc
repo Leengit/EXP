@@ -330,52 +330,18 @@ void BasisFactoryClasses(py::module &m)
     // Inherit the constructors
     using BasisClasses::Basis::Basis;
 
-    std::vector<double> getFields(double x, double y, double z, bool origin) override
+    std::vector<double> getFields(double x, double y, double z) override
     {
-      pybind11::gil_scoped_acquire gil;
-      pybind11::function override_func =
-	pybind11::get_override(static_cast<const Basis*>(this), "getFields");
-      if (override_func) {
-	try {
-	  auto result = override_func(x, y, z, origin);
-	  return result.cast<std::vector<double>>();
-	} catch (pybind11::error_already_set& e) {
-	  if (e.matches(PyExc_TypeError)) {
-	    // Backward-compatible fallback for subclasses with 3-arg signature
-	    PyErr_Clear();
-	    auto result = override_func(x, y, z);
-	    return result.cast<std::vector<double>>();
-	  }
-	  throw;
-	}
-      }
-      return Basis::getFields(x, y, z, origin);
+      PYBIND11_OVERRIDE(std::vector<double>, Basis, getFields, x, y, z);
     }
 
     using FCReturn = std::tuple<std::map<std::string, Eigen::VectorXd>,
 				Eigen::VectorXd>;
 
     FCReturn getFieldsCoefs
-    (double x, double y, double z, CoefClasses::CoefsPtr coefs, bool origin) override
+    (double x, double y, double z, CoefClasses::CoefsPtr coefs) override
     {
-      pybind11::gil_scoped_acquire gil;
-      pybind11::function override_func =
-	pybind11::get_override(static_cast<const Basis*>(this), "getFieldsCoefs");
-      if (override_func) {
-	try {
-	  auto result = override_func(x, y, z, coefs, origin);
-	  return result.cast<FCReturn>();
-	} catch (pybind11::error_already_set& e) {
-	  if (e.matches(PyExc_TypeError)) {
-	    // Backward-compatible fallback for subclasses with 4-arg signature
-	    PyErr_Clear();
-	    auto result = override_func(x, y, z, coefs);
-	    return result.cast<FCReturn>();
-	  }
-	  throw;
-	}
-      }
-      return Basis::getFieldsCoefs(x, y, z, coefs, origin);
+      PYBIND11_OVERRIDE(FCReturn, Basis, getFieldsCoefs, x, y, z, coefs);
     }
     
     void accumulate(double x, double y, double z, double mass, unsigned long int indx) override {
@@ -468,22 +434,9 @@ void BasisFactoryClasses(py::module &m)
     // Inherit the constructors
     using FieldBasis::FieldBasis;
 
-    std::vector<double> getFields(double x, double y, double z, bool origin) override
+    std::vector<double> getFields(double x, double y, double z) override
     {
-      py::gil_scoped_acquire gil;
-      py::function override = py::get_override(static_cast<const FieldBasis *>(this), "getFields");
-
-      if (override) {
-        try {
-          return override(x, y, z, origin).cast<std::vector<double>>();
-        } catch (py::error_already_set &e) {
-          if (!e.matches(PyExc_TypeError)) throw;
-          e.clear();
-          return override(x, y, z).cast<std::vector<double>>();
-        }
-      }
-
-      return FieldBasis::getFields(x, y, z, origin);
+      PYBIND11_OVERRIDE(std::vector<double>, FieldBasis, getFields, x, y, z);
     }
 
     void accumulate(double m, double x, double y, double z,
@@ -608,17 +561,12 @@ void BasisFactoryClasses(py::module &m)
     // Inherit the constructors
     using Spherical::Spherical;
 
-    std::vector<double> getFields(double x, double y, double z, bool origin) override {
+    std::vector<double> getFields(double x, double y, double z) override {
       py::function override = py::get_override(static_cast<const Spherical*>(this), "getFields");
       if (override) {
-        try {
-          return py::cast<std::vector<double>>(override(x, y, z, origin));
-        } catch (py::error_already_set &e) {
-          if (!e.matches(PyExc_TypeError)) throw;
-        }
         return py::cast<std::vector<double>>(override(x, y, z));
       }
-      return Spherical::getFields(x, y, z, origin);
+      return Spherical::getFields(x, y, z);
     }
 
     void accumulate(double x, double y, double z, double mass, unsigned long int indx) override {
@@ -683,8 +631,8 @@ void BasisFactoryClasses(py::module &m)
     // Inherit the constructors
     using Cylindrical::Cylindrical;
 
-    std::vector<double> getFields(double x, double y, double z, bool origin) override {
-      PYBIND11_OVERRIDE(std::vector<double>, Cylindrical, getFields, x, y, z, origin);
+    std::vector<double> getFields(double x, double y, double z) override {
+      PYBIND11_OVERRIDE(std::vector<double>, Cylindrical, getFields, x, y, z);
     }
 
     void accumulate(double x, double y, double z, double mass, unsigned long int indx) override {
@@ -761,9 +709,9 @@ void BasisFactoryClasses(py::module &m)
     // Inherit the constructors
     using FlatDisk::FlatDisk;
 
-    std::vector<double> getFields(double x, double y, double z, bool origin) override
+    std::vector<double> getFields(double x, double y, double z) override
     {
-      PYBIND11_OVERRIDE(std::vector<double>, FlatDisk, getFields, x, y, z, origin);
+      PYBIND11_OVERRIDE(std::vector<double>, FlatDisk, getFields, x, y, z);
     }
 
     void accumulate(double x, double y, double z, double mass, unsigned long int indx) override
@@ -843,20 +791,9 @@ void BasisFactoryClasses(py::module &m)
     // Inherit the constructors
     using CBDisk::CBDisk;
 
-    std::vector<double> getFields(double x, double y, double z, bool origin) override
+    std::vector<double> getFields(double x, double y, double z) override
     {
-      py::gil_scoped_acquire gil;
-      py::function override = py::get_override(this, "getFields");
-      if (override) {
-        try {
-          return override(x, y, z, origin).cast<std::vector<double>>();
-        } catch (py::error_already_set &e) {
-          if (!e.matches(PyExc_TypeError)) throw;
-          PyErr_Clear();
-          return override(x, y, z).cast<std::vector<double>>();
-        }
-      }
-      return CBDisk::getFields(x, y, z, origin);
+      PYBIND11_OVERRIDE(std::vector<double>, CBDisk, getFields, x, y, z);
     }
 
     void accumulate(double x, double y, double z, double mass, unsigned long int indx) override
@@ -928,21 +865,9 @@ void BasisFactoryClasses(py::module &m)
     // Inherit the constructors
     using Slab::Slab;
 
-    std::vector<double> getFields(double x, double y, double z, bool origin) override
+    std::vector<double> getFields(double x, double y, double z) override
     {
-      py::gil_scoped_acquire gil;
-      py::function overload = py::get_overload(static_cast<const Slab *>(this), "getFields");
-      if (overload) {
-        try {
-          return overload(x, y, z, origin).cast<std::vector<double>>();
-        } catch (py::error_already_set &e) {
-          if (!e.matches(PyExc_TypeError)) throw;
-        }
-
-        return overload(x, y, z).cast<std::vector<double>>();
-      }
-
-      return Slab::getFields(x, y, z, origin);
+      PYBIND11_OVERRIDE(std::vector<double>, Slab, getFields, x, y, z);
     }
 
     void accumulate(double x, double y, double z, double mass, unsigned long int indx) override
@@ -1014,21 +939,9 @@ void BasisFactoryClasses(py::module &m)
     // Inherit the constructors
     using Cube::Cube;
 
-    std::vector<double> getFields(double x, double y, double z, bool origin) override
+    std::vector<double> getFields(double x, double y, double z) override
     {
-      py::function override = py::get_override(this, "getFields");
-      if (override) {
-        try {
-          return override(x, y, z, origin).cast<std::vector<double>>();
-        } catch (py::error_already_set &e) {
-          if (e.matches(PyExc_TypeError)) {
-            e.clear();
-            return override(x, y, z).cast<std::vector<double>>();
-          }
-          throw;
-        }
-      }
-      return Cube::getFields(x, y, z, origin);
+      PYBIND11_OVERRIDE(std::vector<double>, Cube, getFields, x, y, z);
     }
 
     void accumulate(double x, double y, double z, double mass, unsigned long int indx) override
@@ -1613,13 +1526,9 @@ void BasisFactoryClasses(py::module &m)
          potential evaluations are separated into full, axisymmetric and
          non-axisymmetric contributions.
 
-         The origin for field evaluations is the expansion origin by
-         default ('origin=True') Setting 'origin=False' will use the
-         origin defined by the coefficients for field evaluations instead.
-
          You can get the field labels by using the __call__ method of the
          basis object.  This is equivalent to a tuple of the getFields()
-         output with a list of field labels with 'origin=True'.
+         output with a list of field labels.
 
          Parameters
          ----------
@@ -1629,9 +1538,6 @@ void BasisFactoryClasses(py::module &m)
              y-axis position
          z : float
              z-axis position
-         origin : bool
-             If true, the default, origin for field evaluations is (0, 0, 0).
-             If false,  we use the frame defined by the coefficients.
 
          Returns
          -------
@@ -1639,10 +1545,35 @@ void BasisFactoryClasses(py::module &m)
 
          See also
          --------
+         getFieldsOrigin: get fields in coefficient-origin frame
          getFieldsCoefs : get fields for each coefficient set
          __call__       : same as getFields() but provides field labels in a tuple
          )",
-	 py::arg("x"), py::arg("y"), py::arg("z"), py::arg("origin") = true)
+	 py::arg("x"), py::arg("y"), py::arg("z"))
+    .def("getFieldsOrigin", &BasisClasses::BiorthBasis::getFieldsOrigin,
+	 R"(
+         Return the field evaluations for a given Cartesian position in
+         the frame defined by the current coefficients.
+
+         Parameters
+         ----------
+         x : float
+             x-axis position
+         y : float
+             y-axis position
+         z : float
+             z-axis position
+
+         Returns
+         -------
+         fields: numpy.ndarray
+
+         See also
+         --------
+         getFields      : get fields in expansion-origin frame
+         getFieldsCoefs : get fields for each coefficient set
+         )",
+	 py::arg("x"), py::arg("y"), py::arg("z"))
     .def("getAccel", py::overload_cast<double, double, double>(&BasisClasses::BiorthBasis::getAccel),
 	 R"(
          Return the acceleration for a given Cartesian position in the frame defined by the coefficients.
@@ -1741,10 +1672,6 @@ void BasisFactoryClasses(py::module &m)
          for every frame in a coefficient set.  The field evaluations are
          produced by a call to getFields().
 
-         The origin for field evaluations is the expansion origin by
-         default ('origin=True') Setting 'origin=False' will use the
-         origin defined by the coefficients for field evaluations instead.
-
          You get a dictionary of fields keyed by field name and an array
          of evaluation times for convenience.  These times will be the same
          as Times() for the coefficient object.
@@ -1759,9 +1686,6 @@ void BasisFactoryClasses(py::module &m)
              z-axis position
          coefs: CoefClasses::Coefs
              the coefficient set
-         origin : bool
-             If true, the default, origin for field evaluations is (0, 0, 0).
-             If false,  we use the frame defined by the coefficients.
 
          Returns
          -------
@@ -1770,10 +1694,38 @@ void BasisFactoryClasses(py::module &m)
 
          See also
          --------
-         getFields  : get fields for the currently assigned coefficients
-         __call__   : same getFields() but provides field labels in a tuple
+         getFields        : get fields for the currently assigned coefficients
+         getFieldsOrigin  : get fields in coefficient-origin frame
+         __call__         : same getFields() but provides field labels in a tuple
          )",
-	 py::arg("x"), py::arg("y"), py::arg("z"), py::arg("coefs"), py::arg("origin") = true)
+	 py::arg("x"), py::arg("y"), py::arg("z"), py::arg("coefs"))
+    .def("getFieldsCoefsOrigin", &BasisClasses::BiorthBasis::getFieldsCoefsOrigin,
+	 R"(
+         Return the field evaluations for a given Cartesian position
+         for every frame in a coefficient set in the frame defined by
+         each coefficient structure.
+
+         Parameters
+         ----------
+         x : float
+             x-axis position
+         y : float
+             y-axis position
+         z : float
+             z-axis position
+         coefs: CoefClasses::Coefs
+             the coefficient set
+
+         Returns
+         -------
+         tuple of a dictionary of fields of array values, and an
+             array of evaluation times
+
+         See also
+         --------
+         getFieldsCoefs : get fields in expansion-origin frame
+         )",
+	 py::arg("x"), py::arg("y"), py::arg("z"), py::arg("coefs"))
     .def("setFieldType",       &BasisClasses::BiorthBasis::setFieldType,
          R"(
          Set the coordinate system for force evaluations.  The natural 
