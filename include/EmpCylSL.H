@@ -24,8 +24,8 @@
 #include "coef.H"
 
 #if HAVE_LIBCUDA==1
-#include <cudaParticle.cuH>
-#include <cudaMappingConstants.cuH>
+#include "cudaParticle.cuH"
+#include "cudaMappingConstants.cuH"
 #endif
 
 #include "libvars.H"

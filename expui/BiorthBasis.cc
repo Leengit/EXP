@@ -818,6 +818,11 @@ namespace BasisClasses
   void Spherical::computeAccel(double x, double y, double z,
 			       Eigen::Ref<Eigen::Vector3d> acc)
   {
+    // Shift to center
+    x -= coefctr(0);
+    y -= coefctr(1);
+    z -= coefctr(2);
+
     // Get polar coordinates
     double R2    = x*x + y*y;
     double r2    = R2  + z*z;
@@ -1792,8 +1797,12 @@ namespace BasisClasses
     
     tdens = sl->accumulated_dens_eval(R, z, phi, tdens0);
 
-    double tpotx = tpotR*x/R - tpotp*y/R ;
-    double tpoty = tpotR*y/R + tpotp*x/R ;
+    double tpotx = 0.0;
+    double tpoty = 0.0;
+    if (R > 0.0) {
+      tpotx = tpotR*x/R - tpotp*y/R;
+      tpoty = tpotR*y/R + tpotp*x/R;
+    }
 
     return
       {tdens0, tdens - tdens0, tdens,
@@ -1804,6 +1813,11 @@ namespace BasisClasses
   void Cylindrical::computeAccel(double x, double y, double z,
 				 Eigen::Ref<Eigen::Vector3d> acc)
   {
+    // Shift to center
+    x -= coefctr(0);
+    y -= coefctr(1);
+    z -= coefctr(2);
+
     double R = sqrt(x*x + y*y);
     double phi = atan2(y, x);
 
@@ -1813,8 +1827,12 @@ namespace BasisClasses
     
     tdens = sl->accumulated_dens_eval(R, z, phi, tdens0);
 
-    double tpotx = tpotR*x/R - tpotp*y/R ;
-    double tpoty = tpotR*y/R + tpotp*x/R ;
+    double tpotx = 0.0;
+    double tpoty = 0.0;
+    if (R > 0.0) {
+      tpotx = tpotR*x/R - tpotp*y/R;
+      tpoty = tpotR*y/R + tpotp*x/R;
+    }
 
     // Apply G to forces on return
     acc << tpotx*G, tpoty*G, tpotz*G;
@@ -2481,6 +2499,11 @@ namespace BasisClasses
   void FlatDisk::computeAccel(double x, double y, double z, 
 			      Eigen::Ref<Eigen::Vector3d> acc)
   {
+    // Shift to center
+    x -= coefctr(0);
+    y -= coefctr(1);
+    z -= coefctr(2);
+
     // Get thread id
     int tid = omp_get_thread_num();
 
@@ -2565,8 +2588,12 @@ namespace BasisClasses
     zpot *= -G;
     ppot *= -G;
 
-    double potx = rpot*x/R - ppot*y/R;
-    double poty = rpot*y/R + ppot*x/R;
+    double potx = 0.0;
+    double poty = 0.0;
+    if (R > 0.0) {
+      potx = rpot*x/R - ppot*y/R;
+      poty = rpot*y/R + ppot*x/R;
+    }
 
     acc << potx, poty, zpot;
   }
@@ -3270,6 +3297,11 @@ namespace BasisClasses
   void CBDisk::computeAccel(double x, double y, double z,
 			    Eigen::Ref<Eigen::Vector3d> acc)
   {
+    // Shift to center
+    x -= coefctr(0);
+    y -= coefctr(1);
+    z -= coefctr(2);
+
     // Get thread id
     int tid = omp_get_thread_num();
 
@@ -3330,8 +3362,12 @@ namespace BasisClasses
     rpot *= -G;
     ppot *= -G;
 
-    double potx = rpot*x/R - ppot*y/R;
-    double poty = rpot*y/R + ppot*x/R;
+    double potx = 0.0;
+    double poty = 0.0;
+    if (R > 0.0) {
+      potx = rpot*x/R - ppot*y/R;
+      poty = rpot*y/R + ppot*x/R;
+    }
 
     acc << potx, poty, zpot;
   }
@@ -3756,6 +3792,11 @@ namespace BasisClasses
   void Slab::computeAccel(double x, double y, double z,
 			  Eigen::Ref<Eigen::Vector3d> acc)
   {
+    // Shift to center
+    x -= coefctr(0);
+    y -= coefctr(1);
+    z -= coefctr(2);
+
     // Loop indices
     //
     int ix, iy, iz;
@@ -4328,6 +4369,11 @@ namespace BasisClasses
   void Cube::computeAccel(double x, double y, double z,
 			  Eigen::Ref<Eigen::Vector3d> acc)
   {
+    // Shift to center
+    x -= coefctr(0);
+    y -= coefctr(1);
+    z -= coefctr(2);
+
     // Get thread id
     int tid = omp_get_thread_num();
 

@@ -562,7 +562,11 @@ void BasisFactoryClasses(py::module &m)
     using Spherical::Spherical;
 
     std::vector<double> getFields(double x, double y, double z) override {
-      PYBIND11_OVERRIDE(std::vector<double>, Spherical, getFields, x, y, z);
+      py::function override = py::get_override(static_cast<const Spherical*>(this), "getFields");
+      if (override) {
+        return py::cast<std::vector<double>>(override(x, y, z));
+      }
+      return Spherical::getFields(x, y, z);
     }
 
     void accumulate(double x, double y, double z, double mass, unsigned long int indx) override {
@@ -1522,7 +1526,7 @@ void BasisFactoryClasses(py::module &m)
          potential evaluations are separated into full, axisymmetric and
          non-axisymmetric contributions.
 
-         You can get the fields labels by using the __call__ method of the
+         You can get the field labels by using the __call__ method of the
          basis object.  This is equivalent to a tuple of the getFields()
          output with a list of field labels.
 
@@ -1541,13 +1545,38 @@ void BasisFactoryClasses(py::module &m)
 
          See also
          --------
+         getFieldsOrigin: get fields in coefficient-origin frame
          getFieldsCoefs : get fields for each coefficient set
          __call__       : same as getFields() but provides field labels in a tuple
          )",
 	 py::arg("x"), py::arg("y"), py::arg("z"))
+    .def("getFieldsOrigin", &BasisClasses::BiorthBasis::getFieldsOrigin,
+	 R"(
+         Return the field evaluations for a given Cartesian position in
+         the frame defined by the current coefficients.
+
+         Parameters
+         ----------
+         x : float
+             x-axis position
+         y : float
+             y-axis position
+         z : float
+             z-axis position
+
+         Returns
+         -------
+         fields: numpy.ndarray
+
+         See also
+         --------
+         getFields      : get fields in expansion-origin frame
+         getFieldsCoefs : get fields for each coefficient set
+         )",
+	 py::arg("x"), py::arg("y"), py::arg("z"))
     .def("getAccel", py::overload_cast<double, double, double>(&BasisClasses::BiorthBasis::getAccel),
 	 R"(
-         Return the acceleration for a given Cartesian position
+         Return the acceleration for a given Cartesian position in the frame defined by the coefficients.
 
          Parameters
          ----------
@@ -1571,7 +1600,7 @@ void BasisFactoryClasses(py::module &m)
 	 py::arg("x"), py::arg("y"), py::arg("z"))
     .def("getAccel", py::overload_cast<Eigen::Ref<const Eigen::VectorXd>, Eigen::Ref<const Eigen::VectorXd>, Eigen::Ref<const Eigen::VectorXd>>(&BasisClasses::BiorthBasis::getAccel),
 	 R"(
-         Return the acceleration for a given Cartesian position
+         Return the acceleration for a given Cartesian position in the frame defined by the coefficients.
 
          Parameters
          ----------
@@ -1595,7 +1624,7 @@ void BasisFactoryClasses(py::module &m)
 	 py::arg("x"), py::arg("y"), py::arg("z"))
     .def("getAccel", py::overload_cast<Eigen::Ref<const RowMatrixXd>>(&BasisClasses::BiorthBasis::getAccel),
 	 R"(
-         Return the acceleration for an array of Cartesian positions
+         Return the acceleration for an array of Cartesian positions in the frame defined by the coefficients.
 
          Parameters
          ----------
@@ -1615,7 +1644,7 @@ void BasisFactoryClasses(py::module &m)
 	 py::arg("pos"))
     .def("getAccelArray", py::overload_cast<Eigen::Ref<const Eigen::VectorXd>, Eigen::Ref<const Eigen::VectorXd>, Eigen::Ref<const Eigen::VectorXd>>(&BasisClasses::BiorthBasis::getAccel),
 	 R"(
-         Return the acceleration for a given Cartesian position
+         Return the acceleration for a given Cartesian position in the frame defined by the coefficients.
 
          Parameters
          ----------
@@ -1665,8 +1694,36 @@ void BasisFactoryClasses(py::module &m)
 
          See also
          --------
-         getFields  : get fields for the currently assigned coefficients
-         __call__   : same getFields() but provides field labels in a tuple
+         getFields        : get fields for the currently assigned coefficients
+         getFieldsOrigin  : get fields in coefficient-origin frame
+         __call__         : same getFields() but provides field labels in a tuple
+         )",
+	 py::arg("x"), py::arg("y"), py::arg("z"), py::arg("coefs"))
+    .def("getFieldsCoefsOrigin", &BasisClasses::BiorthBasis::getFieldsCoefsOrigin,
+	 R"(
+         Return the field evaluations for a given Cartesian position
+         for every frame in a coefficient set in the frame defined by
+         each coefficient structure.
+
+         Parameters
+         ----------
+         x : float
+             x-axis position
+         y : float
+             y-axis position
+         z : float
+             z-axis position
+         coefs: CoefClasses::Coefs
+             the coefficient set
+
+         Returns
+         -------
+         tuple of a dictionary of fields of array values, and an
+             array of evaluation times
+
+         See also
+         --------
+         getFieldsCoefs : get fields in expansion-origin frame
          )",
 	 py::arg("x"), py::arg("y"), py::arg("z"), py::arg("coefs"))
     .def("setFieldType",       &BasisClasses::BiorthBasis::setFieldType,
