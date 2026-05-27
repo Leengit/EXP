@@ -233,10 +233,9 @@ namespace BasisClasses
 
   std::vector<double> Basis::getFieldsOrigin(double x, double y, double z)
   {
-    x -= coefctr(0);
-    y -= coefctr(1);
-    z -= coefctr(2);
-    return crt_eval(x, y, z);
+    Eigen::Vector3d p(x, y, z);
+    p = coefrot * (p - coefctr);
+    return crt_eval(p(0), p(1), p(2));
   }
     
   std::tuple<std::map<std::string, Eigen::VectorXd>, Eigen::VectorXd>
