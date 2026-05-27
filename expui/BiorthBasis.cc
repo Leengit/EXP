@@ -2533,7 +2533,7 @@ namespace BasisClasses
       rpot = -G*totalMass*R/(r*r2 + 10.0*std::numeric_limits<double>::min());
       zpot = -G*totalMass*z/(r*r2 + 10.0*std::numeric_limits<double>::min());
       
-      acc = coefrot.transpose() * Eigen::Vector3d(rpot, zpot, ppot);
+      acc = coefrot.transpose() * Eigen::Vector3d(rpot, ppot, zpot);
     }
 
     // Get the basis fields
