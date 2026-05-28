@@ -137,9 +137,9 @@ void BasisFactoryClasses(py::module &m)
     support for computing the coefficieint covariance from subsamples of
     particles.  This is implemented by the enableCoefCovariance() method
     for each of these supported bases.  The force configuration must
-    contain the parameters 'pcavar' (boolean) and 'subsamp' (integer) keys.
+    contain the parameters 'pcavar' (boolean) and 'samplesz' (integer) keys.
     The 'pcavar' parameter turns on the covariance computation.  The
-    'subsamp' parameter sets the number of partions or subsamples for each
+    'samplesz' parameter sets the number of partions or subsamples for each
     coefficient creation.  There are two additional control parameters that
     may be optionally specified with the enableCoefCovariance() call.  The
     'total' parameters enables computing the total covariance matrices only
@@ -176,11 +176,11 @@ void BasisFactoryClasses(py::module &m)
     counts, the sample masses, the coefficient means and the coefficient
     covariance matrices.  The first two elements are vectors of length
     equal to the number of subsamples.  The third element is a 4D array
-    with dimensions (subsamp, Nlm, nmax) where subsamp is the number of
+    with dimensions (samplesz, Nlm, nmax) where samplesz is the number of
     subsamples, Nlm, is the number of harmonics (e.g. l, m values or m
     values for the spherical and cylindrical bases), and nmax is the number
     of coefficients.  The fourth element is a 4D array with dimensions
-    (subsamp, Nlm, nmax, namx) containing the covariance matrices for each
+    (samplesz, Nlm, nmax, namx) containing the covariance matrices for each
     subsample in the last two dimensions.
 
     Typical usage might be:
