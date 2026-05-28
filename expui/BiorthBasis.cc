@@ -4391,9 +4391,6 @@ namespace BasisClasses
     // Get thread id
     int tid = omp_get_thread_num();
 
-    // Position vector
-    Eigen::Vector3d pos {x, y, z};
-
     // Get the basis fields
     auto frc = ortho->get_force(expcoef, pos);
     
