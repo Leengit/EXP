@@ -139,7 +139,7 @@ void BasisFactoryClasses(py::module &m)
     for each of these supported bases.  The force configuration must
     contain the parameters 'pcavar' (boolean) and 'samplesz' (integer) keys.
     The 'pcavar' parameter turns on the covariance computation.  The
-    'samplesz' parameter sets the number of partions or subsamples for each
+    'samplesz' parameter sets the number of partitions or subsamples for each
     coefficient creation.  There are two additional control parameters that
     may be optionally specified with the enableCoefCovariance() call.  The
     'total' parameters enables computing the total covariance matrices only
