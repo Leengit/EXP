@@ -818,10 +818,22 @@ namespace BasisClasses
   void Spherical::computeAccel(double x, double y, double z,
 			       Eigen::Ref<Eigen::Vector3d> acc)
   {
-    // Shift to center
-    x -= coefctr(0);
-    y -= coefctr(1);
-    z -= coefctr(2);
+    struct AccelFrameGuard {
+      Eigen::Ref<Eigen::Vector3d> acc;
+      const decltype(coefrot)& rot;
+
+      ~AccelFrameGuard()
+      {
+        acc = rot.transpose() * acc;
+      }
+    } rotate_acc_to_caller{acc, coefrot};
+
+    // Shift to center and rotate into the coefficient frame
+    Eigen::Vector3d pos(x - coefctr(0), y - coefctr(1), z - coefctr(2));
+    pos = coefrot * pos;
+    x = pos(0);
+    y = pos(1);
+    z = pos(2);
 
     // Get polar coordinates
     double R2    = x*x + y*y;
