@@ -821,6 +821,7 @@ namespace BasisClasses
     // Shift and rotate to expansion frame
     Eigen::Vector3d pos {x, y, z};
     pos = coefrot * (pos - coefctr);
+    
     x = pos(0);
     y = pos(1);
     z = pos(2);
