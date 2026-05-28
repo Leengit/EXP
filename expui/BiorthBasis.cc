@@ -4050,8 +4050,9 @@ namespace BasisClasses
     "verbose",
     "check",
     "method",
-    "pcavar,"
+    "pcavar",
     "subsamp",
+    "samplesz",
     "nint",
     "totalCovar",
     "fullCovar"
