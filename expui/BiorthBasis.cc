@@ -2174,7 +2174,7 @@ namespace BasisClasses
       if (conf["subsamp"]) {
 	if (myid==0)
 	  std::cout << "---- FlatDisk: parameter 'subsamp' is deprecated. "
-		    << "It works, but will be removed in a fture release. "
+		    << "It works, but will be removed in a future release. "
 		    << "Please use 'samplesz' instead."
 		    << std::endl;
       }
