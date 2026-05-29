@@ -30,6 +30,7 @@ int main(int argc, char* argv[])
     std::cout << "MD5: " << hash << std::endl;
   } else {
     std::cerr << "Error: Could not process file." << std::endl;
+    return 1;
   }
   
   // System version of md5sum for comparison
@@ -44,9 +45,11 @@ int main(int argc, char* argv[])
       std::cout << "Success: hashes match!" << std::endl;
     } else {
       std::cerr << "Error: hashes do not match!" << std::endl;
+      return 1;
     }
   } catch (const std::exception& e) {
     std::cerr << "Error computing system md5sum: " << e.what() << std::endl;
+    return 1;
   }
 
   return 0;
