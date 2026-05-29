@@ -25,7 +25,7 @@ int main(int argc, char* argv[])
   std::string type;
   cxxopts::Options options("testDeprojector",
 			   "Test the Deproject class for various surface density profiles.\n"
-			   "Independent implemenation for comparison with the EmpCylSL-based\n"
+			   "Independent implementation for comparison with the EmpCylSL-based\n"
 			   "EmpDeproj class.\n");
   
   options.add_options()
