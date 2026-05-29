@@ -1,9 +1,14 @@
-#include <iostream>
-#include <iomanip>
-#include <fstream>
-#include <vector>
+#include <algorithm>
+#include <cctype>
 #include <cmath>
+#include <fstream>
+#include <functional>
+#include <iomanip>
+#include <iostream>
+#include <map>
 #include <stdexcept>
+#include <string>
+#include <vector>
 
 #include "Deprojector.H"
 #include "cxxopts.H"
