@@ -818,19 +818,10 @@ namespace BasisClasses
   void Spherical::computeAccel(double x, double y, double z,
 			       Eigen::Ref<Eigen::Vector3d> acc)
   {
-    struct AccelFrameGuard {
-      Eigen::Ref<Eigen::Vector3d> acc;
-      const decltype(coefrot)& rot;
-
-      ~AccelFrameGuard()
-      {
-        acc = rot.transpose() * acc;
-      }
-    } rotate_acc_to_caller{acc, coefrot};
-
-    // Shift to center and rotate into the coefficient frame
-    Eigen::Vector3d pos(x - coefctr(0), y - coefctr(1), z - coefctr(2));
-    pos = coefrot * pos;
+    // Shift and rotate to expansion frame
+    Eigen::Vector3d pos {x, y, z};
+    pos = coefrot * (pos - coefctr);
+    
     x = pos(0);
     y = pos(1);
     z = pos(2);
@@ -937,9 +928,9 @@ namespace BasisClasses
     double tpoty = (potr - pott*costh/r)*y/r + potp*x/R2;
     double tpotz = potr*costh + pott*sinth*sinth/r;
 
-    // Return force not potential gradient
+    // Return force not potential gradient and rotate to caller frame
     //
-    acc << tpotx, tpoty, tpotz;
+    acc = coefrot.transpose() * Eigen::Vector3d(tpotx, tpoty, tpotz);
   }
 
 
@@ -1825,10 +1816,12 @@ namespace BasisClasses
   void Cylindrical::computeAccel(double x, double y, double z,
 				 Eigen::Ref<Eigen::Vector3d> acc)
   {
-    // Shift to center
-    x -= coefctr(0);
-    y -= coefctr(1);
-    z -= coefctr(2);
+    // Shift and rotate to expansion frame
+    Eigen::Vector3d pos {x, y, z};
+    pos = coefrot * (pos - coefctr);
+    x = pos(0);
+    y = pos(1);
+    z = pos(2);
 
     double R = sqrt(x*x + y*y);
     double phi = atan2(y, x);
@@ -1846,8 +1839,8 @@ namespace BasisClasses
       tpoty = tpotR*y/R + tpotp*x/R;
     }
 
-    // Apply G to forces on return
-    acc << tpotx*G, tpoty*G, tpotz*G;
+    // Apply G and rotate forces on return
+    acc = coefrot.transpose() * Eigen::Vector3d(tpotx*G, tpoty*G, tpotz*G);
   }
 
   // Evaluate in cylindrical coordinates
@@ -2511,10 +2504,12 @@ namespace BasisClasses
   void FlatDisk::computeAccel(double x, double y, double z, 
 			      Eigen::Ref<Eigen::Vector3d> acc)
   {
-    // Shift to center
-    x -= coefctr(0);
-    y -= coefctr(1);
-    z -= coefctr(2);
+    // Shift and rotate to expansion frame
+    Eigen::Vector3d pos {x, y, z};
+    pos = coefrot * (pos - coefctr);
+    x = pos(0);
+    y = pos(1);
+    z = pos(2);
 
     // Get thread id
     int tid = omp_get_thread_num();
@@ -2539,7 +2534,7 @@ namespace BasisClasses
       rpot = -G*totalMass*R/(r*r2 + 10.0*std::numeric_limits<double>::min());
       zpot = -G*totalMass*z/(r*r2 + 10.0*std::numeric_limits<double>::min());
       
-      acc << rpot, zpot, ppot;
+      acc = coefrot.transpose() * Eigen::Vector3d(rpot, ppot, zpot);
     }
 
     // Get the basis fields
@@ -2607,7 +2602,7 @@ namespace BasisClasses
       poty = rpot*y/R + ppot*x/R;
     }
 
-    acc << potx, poty, zpot;
+    acc = coefrot.transpose() * Eigen::Vector3d(potx, poty, zpot);
   }
 
 
@@ -3309,10 +3304,12 @@ namespace BasisClasses
   void CBDisk::computeAccel(double x, double y, double z,
 			    Eigen::Ref<Eigen::Vector3d> acc)
   {
-    // Shift to center
-    x -= coefctr(0);
-    y -= coefctr(1);
-    z -= coefctr(2);
+    // Shift and rotate to expansion frame
+    Eigen::Vector3d pos {x, y, z};
+    pos = coefrot * (pos - coefctr);
+    x = pos(0);
+    y = pos(1);
+    z = pos(2);
 
     // Get thread id
     int tid = omp_get_thread_num();
@@ -3381,7 +3378,7 @@ namespace BasisClasses
       poty = rpot*y/R + ppot*x/R;
     }
 
-    acc << potx, poty, zpot;
+    acc = coefrot.transpose() * Eigen::Vector3d(potx, poty, zpot);
   }
 
 
@@ -3804,10 +3801,12 @@ namespace BasisClasses
   void Slab::computeAccel(double x, double y, double z,
 			  Eigen::Ref<Eigen::Vector3d> acc)
   {
-    // Shift to center
-    x -= coefctr(0);
-    y -= coefctr(1);
-    z -= coefctr(2);
+    // Shift and rotate to expansion frame
+    Eigen::Vector3d pos {x, y, z};
+    pos = coefrot * (pos - coefctr);
+    x = pos(0);
+    y = pos(1);
+    z = pos(2);
 
     // Loop indices
     //
@@ -3880,8 +3879,9 @@ namespace BasisClasses
       }
     }
 
-    // Apply G to forces on return
-    acc << G*accx.real(), G*accy.real(), G*accz.real();
+    // Apply G to forces on return and rotate to caller frame
+    acc = coefrot.transpose() *
+      Eigen::Vector3d(G*accx.real(), G*accy.real(), G*accz.real());
   }
 
 
@@ -4381,22 +4381,22 @@ namespace BasisClasses
   void Cube::computeAccel(double x, double y, double z,
 			  Eigen::Ref<Eigen::Vector3d> acc)
   {
-    // Shift to center
-    x -= coefctr(0);
-    y -= coefctr(1);
-    z -= coefctr(2);
+    // Shift and rotate to expansion frame
+    Eigen::Vector3d pos {x, y, z};
+    pos = coefrot * (pos - coefctr);
+    x = pos(0);
+    y = pos(1);
+    z = pos(2);
 
     // Get thread id
     int tid = omp_get_thread_num();
 
-    // Position vector
-    Eigen::Vector3d pos {x, y, z};
-
     // Get the basis fields
     auto frc = ortho->get_force(expcoef, pos);
     
-    // Apply G to forces on return
-    acc << -G*frc(0).real(), -G*frc(1).real(), -G*frc(2).real();
+    // Apply G to forces on return and rotate to caller frame
+    acc = coefrot.transpose() *
+      Eigen::Vector3d(-G*frc(0).real(), -G*frc(1).real(), -G*frc(2).real());
   }
 
   std::vector<double> Cube::cyl_eval(double R, double z, double phi)
