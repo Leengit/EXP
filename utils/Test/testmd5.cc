@@ -1,9 +1,10 @@
 // This test verifies that QuickDigest5 correctly computes the MD5
 // hash of a file
 
-#include <iostream>
+#include <cstdlib>
 #include <filesystem>
-
+#include <iostream>
+#include <string>
 #include "quickdigest5.hpp"
 
 #include "exputils.H" // For get_md5sum which uses the system's md5sum
