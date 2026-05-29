@@ -275,9 +275,19 @@ namespace BasisClasses
       if (conf["M0_ONLY"])   M0_only   = conf["M0_ONLY"].as<bool>();
       if (conf["pcavar"])    pcavar    = conf["pcavar"].as<bool>();
       if (conf["subsamp"])   sampT     = conf["subsamp"].as<int>();
+      if (conf["samplesz"])  sampT     = conf["samplesz"].as<int>();
 
       sampT = std::max(1, sampT); // Sanity
-    } 
+
+      // Deprecation warning
+      if (conf["subsamp"]) {
+	if (myid==0)
+	  std::cout << "---- Spherical: parameter 'subsamp' is deprecated. "
+		    << "It works, but will be removed in version >= 7.11. "
+		    << "Please use 'samplesz' instead."
+		    << std::endl;
+      }
+    }
     catch (YAML::Exception & error) {
       if (myid==0) std::cout << "Error parsing parameter stanza for <"
 			     << name << ">: "
@@ -1522,6 +1532,7 @@ namespace BasisClasses
       if (conf["pyproj"    ])      pyproj = conf["pyproj"    ].as<std::string>();
       if (conf["pcavar"]    )      pcavar = conf["pcavar"    ].as<bool>();
       if (conf["subsamp"]   )      sampT  = conf["subsamp"   ].as<int>();
+      if (conf["samplesz"  ])      sampT  = conf["samplesz"  ].as<int>();
 
       // Sanity
       sampT = std::max(1, sampT);
@@ -1537,14 +1548,23 @@ namespace BasisClasses
       // Deprecation warning
       if (conf["eof_file"]) {
 	if (myid==0)
-	  std::cout << "Cylinder: parameter 'eof_file' is deprecated. "
-		    << "and will be removed in a future release. Please "
+	  std::cout << "Cylindrical: parameter 'eof_file' is deprecated. "
+		    << "and will be removed in version >= 7.11. Please "
 		    << "use 'cachename' instead."
 		    << std::endl;
 
 	conf["cachename"] = conf["eof_file"];
       }
       
+      // Deprecation warning
+      if (conf["subsamp"]) {
+	if (myid==0)
+	  std::cout << "---- Cylindrical: parameter 'subsamp' is deprecated. "
+		    << "It works, but will be removed in version >= 7.11. "
+		    << "Please use 'samplesz' instead."
+		    << std::endl;
+      }
+
     }
     catch (YAML::Exception & error) {
       if (myid==0) std::cout << "Error parsing 'force' for Component <"
@@ -2482,8 +2502,18 @@ namespace BasisClasses
       if (conf["M0_ONLY"])   M0_only   = conf["M0_ONLY"].as<bool>();
       if (conf["pcavar"])    pcavar    = conf["pcavar"].as<bool>();
       if (conf["subsamp"])   sampT     = conf["subsamp"].as<int>();
+      if (conf["samplesz"])  sampT     = conf["samplesz"].as<int>();
 
       sampT = std::max(1, sampT); // Sanity
+
+      if (conf["subsamp"]) {
+	if (myid==0)
+	  std::cout << "---- FlatDisk: parameter 'subsamp' is deprecated. "
+		    << "It works, but will be removed in version >= 7.11. "
+		    << "Please use 'samplesz' instead."
+		    << std::endl;
+      }
+
     } 
     catch (YAML::Exception & error) {
       if (myid==0) std::cout << "Error parsing parameter stanza for <"
@@ -4362,8 +4392,9 @@ namespace BasisClasses
     "verbose",
     "check",
     "method",
-    "pcavar,"
+    "pcavar",
     "subsamp",
+    "samplesz",
     "nint",
     "totalCovar",
     "fullCovar"
@@ -4422,20 +4453,30 @@ namespace BasisClasses
     // Assign values from YAML
     //
     try {
-      if (conf["nminx"])      nminx  = conf["nminx"  ].as<int>();
-      if (conf["nminy"])      nminy  = conf["nminy"  ].as<int>();
-      if (conf["nminz"])      nminz  = conf["nminz"  ].as<int>();
+      if (conf["nminx"])      nminx  = conf["nminx"   ].as<int>();
+      if (conf["nminy"])      nminy  = conf["nminy"   ].as<int>();
+      if (conf["nminz"])      nminz  = conf["nminz"   ].as<int>();
       
-      if (conf["nmaxx"])      nmaxx  = conf["nmaxx"  ].as<int>();
-      if (conf["nmaxy"])      nmaxy  = conf["nmaxy"  ].as<int>();
-      if (conf["nmaxz"])      nmaxz  = conf["nmaxz"  ].as<int>();
+      if (conf["nmaxx"])      nmaxx  = conf["nmaxx"   ].as<int>();
+      if (conf["nmaxy"])      nmaxy  = conf["nmaxy"   ].as<int>();
+      if (conf["nmaxz"])      nmaxz  = conf["nmaxz"   ].as<int>();
       
-      if (conf["knots"])      knots  = conf["knots"  ].as<int>();
+      if (conf["knots"])      knots  = conf["knots"   ].as<int>();
 
-      if (conf["check"])      check  = conf["check"  ].as<bool>();
+      if (conf["check"])      check  = conf["check"   ].as<bool>();
 
-      if (conf["pcavar"])     pcavar = conf["pcavar" ].as<bool>();
-      if (conf["subsamp"])    sampT  = conf["subsamp"].as<int>();
+      if (conf["pcavar"])     pcavar = conf["pcavar"  ].as<bool>();
+      if (conf["subsamp"])    sampT  = conf["subsamp" ].as<int>();
+      if (conf["samplesz"])   sampT  = conf["samplesz"].as<int>();
+
+      if (conf["subsamp"]) {
+	if (myid==0)
+	  std::cout << "---- Cube: parameter 'subsamp' is deprecated. "
+		    << "It works, but will be removed in version >= 7.11. "
+		    << "Please use 'samplesz' instead."
+		    << std::endl;
+      }
+
     } 
     catch (YAML::Exception & error) {
       if (myid==0) std::cout << "Error parsing parameter stanza for <"
