@@ -18,9 +18,9 @@ int main(int argc, char* argv[])
   // Check if the file exists before trying to hash it
   std::filesystem::path p(filePath);
   if (!std::filesystem::exists(p)) {
-    std::cout << "File <" << filePath << "> not found." << std::endl
-	      << "Usage: " << argv[0] << " [file_path]" << std::endl
-	      << "Defaulting to example.txt if it exists." << std::endl;
+    std::cerr << "File <" << filePath << "> not found." << std::endl
+              << "Usage: " << argv[0] << " [file_path]" << std::endl;
+    return 1;
   }
 
   // One-line method to get the hex digest of a file
