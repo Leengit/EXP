@@ -283,7 +283,7 @@ namespace BasisClasses
       if (conf["subsamp"]) {
 	if (myid==0)
 	  std::cout << "---- Spherical: parameter 'subsamp' is deprecated. "
-		    << "It works, but will be removed in a future release. "
+		    << "It works, but will be removed in version >= 7.11. "
 		    << "Please use 'samplesz' instead."
 		    << std::endl;
       }
@@ -1549,7 +1549,7 @@ namespace BasisClasses
       if (conf["eof_file"]) {
 	if (myid==0)
 	  std::cout << "Cylindrical: parameter 'eof_file' is deprecated. "
-		    << "and will be removed in a future release. Please "
+		    << "and will be removed in version >= 7.11. Please "
 		    << "use 'cachename' instead."
 		    << std::endl;
 
@@ -1560,7 +1560,7 @@ namespace BasisClasses
       if (conf["subsamp"]) {
 	if (myid==0)
 	  std::cout << "---- Cylindrical: parameter 'subsamp' is deprecated. "
-		    << "It works, but will be removed in a future release. "
+		    << "It works, but will be removed in version >= 7.11. "
 		    << "Please use 'samplesz' instead."
 		    << std::endl;
       }
@@ -2509,7 +2509,7 @@ namespace BasisClasses
       if (conf["subsamp"]) {
 	if (myid==0)
 	  std::cout << "---- FlatDisk: parameter 'subsamp' is deprecated. "
-		    << "It works, but will be removed in a future release. "
+		    << "It works, but will be removed in version >= 7.11. "
 		    << "Please use 'samplesz' instead."
 		    << std::endl;
       }
@@ -4472,7 +4472,7 @@ namespace BasisClasses
       if (conf["subsamp"]) {
 	if (myid==0)
 	  std::cout << "---- Cube: parameter 'subsamp' is deprecated. "
-		    << "It works, but will be removed in a future release. "
+		    << "It works, but will be removed in version >= 7.11. "
 		    << "Please use 'samplesz' instead."
 		    << std::endl;
       }
