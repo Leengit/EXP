@@ -1,4 +1,3 @@
-#include <stdexcept>
 #include "DiskDensityFunc.H"
 
 #ifdef HAVE_PYTHON3

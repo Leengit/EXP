@@ -66,6 +66,7 @@ option(ENABLE_TESTS "Enable build tests for EXP, pyEXP and helpers" ON)
 option(ENABLE_MINIMAL "Compile EXP support libraries only" OFF)
 option(BUILD_SHARED_LIBS "Build using shared libraries" ON)
 option(BUILD_DOCS "Build documentation" OFF)
+option(DISABLE_PYTHON "Disable the Python development environment" OFF)
 
 # Metaflag for minimal build
 
@@ -298,13 +299,15 @@ if(ENABLE_TESTS)
   add_subdirectory(tests)
 endif()
 
-if(ENABLE_PYEXP)
-  # try to find pybind11 and build wrapper python module
+# try to find pybind11 and build wrapper python module
+if (NOT DISABLE_PYTHON)
   find_package(Python3 COMPONENTS Interpreter Development)
-  message(STATUS "python3 include dirs: ${Python3_INCLUDE_DIRS}")
-  if(Python3_FOUND)
-    set(HAVE_PYTHON3 TRUE)
-  else()
+endif()
+message(STATUS "python3 include dirs: ${Python3_INCLUDE_DIRS}")
+if(Python3_FOUND)
+  set(HAVE_PYTHON3 TRUE)
+else()
+  if(ENABLE_PYEXP)
     message(FATAL_ERROR "You asked for pyEXP but I cannot find a Python3 environment. Please make Python3 available or disable pyEXP. CMake will exit." )
   endif()
 endif()
